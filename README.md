@@ -72,6 +72,20 @@ graph TD
 
 ---
 
+## Example Outputs
+
+Below are some example responses and execution traces from the RAG agent workflow:
+
+![Example Output 1](output/Output1.png)
+<br>
+![Example Output 2](output/Output2.png)
+<br>
+![Example Output 3](output/Output3.png)
+<br>
+![Example Output 4](output/Output4.png)
+
+---
+
 ## Getting Started & Installation
 
 Follow these steps to set up and run this project locally.
