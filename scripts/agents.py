@@ -18,7 +18,7 @@ def supervisor_agent_node(gs: GraphState):
     "docs": True if gs.get('documents') else False,
     "answer": True if gs.get('answer') else False
    })
-   return {}
+   return {"next_node": result.next_worker}
 
 def retrieve_agent_node(gs: GraphState):
     llm_tools = llm.bind_tools([search_knowledge])
@@ -60,3 +60,10 @@ def generator_agent_node(gs: GraphState):
         "docs": True if gs.get('documents') else False,
     })
     return {"answer": result.content}
+
+def route_logic(gs: GraphState):
+    worker = gs.get('next_worker')
+
+    if worker == "END":
+        return "__end__"
+    return worker
