@@ -62,7 +62,7 @@ def generator_agent_node(gs: GraphState):
     return {"answer": result.content}
 
 def route_logic(gs: GraphState):
-    worker = gs.get('next_worker')
+    worker = gs.get('next_node')
 
     if worker == "END":
         return "__end__"
