@@ -26,7 +26,8 @@ def retrieve_agent_node(gs: GraphState):
 
     documents = []
     if result.tool_calls:
-        for _, call in enumerate(result.tool_calls):
+        for idx, call in enumerate(result.tool_calls):
+            print(f"round: {idx+1}")
             documents.append(search_knowledge.invoke(call['args']))
 
     return {"documents": documents}
@@ -54,7 +55,7 @@ def generator_agent_node(gs: GraphState):
         ),
         ("user", "Question: {question}\nContexts: {docs}")
     ])
-    chain = prompt | llm.with_structured_output(Supervised_response)
+    chain = prompt | llm
     result = chain.invoke({
         "question": gs['question'],
         "docs": True if gs.get('documents') else False,

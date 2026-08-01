@@ -28,7 +28,7 @@ def search_knowledge(query: str, k: int = 5)->str:
     chunks = text_split.split_text(contents)
     # Knowledge are in english format
     chunk_tokenized = [chunk.lower().split() for chunk in chunks]
-    bm25 = BM25Okapi(tokenizer=chunk_tokenized)
+    bm25 = BM25Okapi(chunk_tokenized)
 
     query_tokenized  = query.lower().split()
 

@@ -17,6 +17,6 @@ if __name__ == "__main__":
             "answer" : "",
             "next_node" : "supervisor_agent"
         }
-        answer = graph.invoke(init_state, config={"recursion_limit": 10})
+        answer = graph.invoke(init_state, config={"recursion_limit": 30})
         print("=========== Answer ===========")
         print(answer['answer'])
