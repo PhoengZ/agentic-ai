@@ -72,6 +72,17 @@ graph TD
 
 ---
 
+## How Knowledge Search Works
+
+To search for information within the `knowledge_base.txt` file, the system relies on a **keyword search mechanism using the BM25 algorithm**. 
+
+When a query is received:
+1. The text in the knowledge file is split into smaller chunks.
+2. The **BM25 algorithm** scores these chunks based on term frequency and inverse document frequency against the query.
+3. A **Top-k** filtering approach is applied to limit the number of returned chunks. This ensures the Generator agent only receives the most highly relevant context without exceeding token limits or introducing noise. By default, `k` is dynamically chosen depending on the query type (e.g., factual vs comprehensive).
+
+---
+
 ## Example Outputs
 
 Below are some example responses and execution traces from the RAG agent workflow:
