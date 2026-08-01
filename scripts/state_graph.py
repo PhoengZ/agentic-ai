@@ -6,3 +6,4 @@ class GraphState(TypedDict):
     question: str
     documents: List[str]
     answer: str
+    next_node: str

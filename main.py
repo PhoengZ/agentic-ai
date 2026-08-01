@@ -1,4 +1,7 @@
 from scripts.workflow import graph
+import os
+from dotenv import load_dotenv
+load_dotenv()
 if __name__ == "__main__":
     print("This is agent to answer the question about policy of Company A. If you want to end the session, please type 'exit'.")
     print("______________________________________________________________")

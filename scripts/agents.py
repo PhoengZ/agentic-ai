@@ -1,6 +1,6 @@
-from state_graph import GraphState
-from config import llm, Supervised_response
-from tools import search_knowledge
+from scripts.state_graph import GraphState
+from scripts.config import llm, Supervised_response
+from scripts.tools import search_knowledge
 from langchain_core.prompts import ChatPromptTemplate
 def supervisor_agent_node(gs: GraphState):
    prompt =  ChatPromptTemplate.from_messages(

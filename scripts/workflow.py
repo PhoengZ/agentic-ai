@@ -1,6 +1,6 @@
 from langgraph.graph import StateGraph, END
-from state_graph import GraphState
-from agents import generator_agent_node, retrieve_agent_node, supervisor_agent_node, route_logic
+from scripts.state_graph import GraphState
+from scripts.agents import generator_agent_node, retrieve_agent_node, supervisor_agent_node, route_logic
 workflow = StateGraph(GraphState)
 
 workflow.add_node("generator_agent", generator_agent_node)
