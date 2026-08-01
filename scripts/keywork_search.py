@@ -1,8 +1,9 @@
 from langchain_core.tools import tool
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from rank_bm25 import BM25Okapi
 
 @tool
-def search_knowledge(query)->str:
+def search_knowledge(query: str, k: int = 5)->str:
     try:
         with open("knowledge_base.txt", "r", encoding="utf-8") as f:
             contents = f.read()
@@ -15,13 +16,27 @@ def search_knowledge(query)->str:
     )
 
     chunks = text_split.split_text(contents)
-    
+    # Knowledge are in english format
+    chunk_tokenized = [chunk.lower().split() for chunk in chunks]
+    bm25 = BM25Okapi(tokenizer=chunk_tokenized)
+
+    query_tokenized  = query.lower().split()
+
+    scores = bm25.get_scores(query_tokenized)
+
     relevant_chunk = []
     for idx, chunk in enumerate(chunks):
-        if query.lower() in chunk.lower():
-            relevant_chunk.append(f"chunk: {idx+1}\n\n {chunk}") 
+        if scores[idx] > 0:
+            relevant_chunk.append({
+                "chunk": chunk,
+                "score": scores[idx] 
+            }) 
 
+    relevant_chunk.sort(key=lambda x: x["score"], reverse=True)
+    
     if relevant_chunk:
-        return "\n".join(relevant_chunk)
+        top_k_chunks = relevant_chunk[:k]
+        top_k_chunks_str = [f"Score: {item['score']}\nChunk: {item['chunk']}" for item in top_k_chunks]
+        return "\n\n".join(top_k_chunks_str)
     else:
         return "Not found in knowledge base"
