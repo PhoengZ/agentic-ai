@@ -4,6 +4,16 @@ from rank_bm25 import BM25Okapi
 
 @tool
 def search_knowledge(query: str, k: int = 5)->str:
+    """
+    Search the knowledge base for relevant information.
+    
+    Args:
+        query: The specific keyword or phrase to search for. (Extract this from user's question).
+        k: The number of top relevant chunks to return. 
+           - Use k=3 for simple, specific factual questions.
+           - Use k=5 (default) for general questions.
+           - Use k=10 if the user asks for a comprehensive summary, list, or detailed explanation.
+    """
     try:
         with open("knowledge_base.txt", "r", encoding="utf-8") as f:
             contents = f.read()
