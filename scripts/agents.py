@@ -8,15 +8,16 @@ def supervisor_agent_node(gs: GraphState):
         ("system", """You are a Supervisor orchestrating two workers: 'retriever_agent' and 'generator_agent'.
                    1. If we don't have retrieved documents yet, call 'retriever_agent'.
                    2. If we have documents but the question isn't answer, call 'generator_agent'.
-                   3. If the question is answered, output 'END' to terminate the workflow."""),
-        ("user", "Question: {question}\n Document Retrieve: {docs}")
+                   3. If the answer is ready, output 'END' to terminate the workflow."""),
+        ("user", "Question: {question}\n Document Retrieve: {docs}\nAnswer Generated: {answer}")
     ]
    )
    chain = prompt | llm.with_structured_output(Supervised_response)
+   docs_text = "\n\n".join(gs.get('documents', [])) if gs.get('documents') else "No documents retrieved."
    result = chain.invoke({
     "question": gs['question'],
-    "docs": True if gs.get('documents') else False,
-    "answer": True if gs.get('answer') else False
+    "docs": docs_text,
+    "answer": gs.get('answer') or "No answer generated yet."
    })
    return {"next_node": result.next_worker}
 
@@ -27,7 +28,8 @@ def retrieve_agent_node(gs: GraphState):
     documents = []
     if result.tool_calls:
         for idx, call in enumerate(result.tool_calls):
-            print(f"round: {idx+1}")
+            # print(f"round: {idx+1}")
+            # print(f"callargs" , call['args'])
             documents.append(search_knowledge.invoke(call['args']))
 
     return {"documents": documents}
@@ -56,15 +58,15 @@ def generator_agent_node(gs: GraphState):
         ("user", "Question: {question}\nContexts: {docs}")
     ])
     chain = prompt | llm
+    docs_text = "\n\n".join(gs.get('documents', [])) if gs.get('documents') else "No documents retrieved."
     result = chain.invoke({
         "question": gs['question'],
-        "docs": True if gs.get('documents') else False,
+        "docs": docs_text,
     })
-    return {"answer": result.content}
+    return {"answer": result.content[1]['text']}
 
 def route_logic(gs: GraphState):
     worker = gs.get('next_node')
-
     if worker == "END":
         return "__end__"
     return worker
